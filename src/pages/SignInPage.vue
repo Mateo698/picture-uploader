@@ -52,7 +52,7 @@ export default defineComponent({
     },
     methods: {
         signIn () {
-            this.$router.push('/home')
+            this.$router.push('/')
         },
         signUp () {
             this.$router.push('/register')

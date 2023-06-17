@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf" >
+  <q-layout view="lHh Lpr lFf" v-if="user">
     <q-header elevated>
       <q-toolbar v-if="user" class="row justify-center" style="height: 65px;">
         <div style="display: flex; flex-grow: 1;justify-content: center;">
@@ -19,6 +19,14 @@
       />
     </q-page-container>
   </q-layout>
+  <q-layout v-else view="lHh Lpr lFf" class="column flex-center" style="border: 1px solid red;">
+    <h1>You don't have access to this page</h1>
+    <q-btn
+      color="primary"
+      label="Sign In"
+      @click="signIn()"
+    />
+  </q-layout>
 </template>
 
 <script>
@@ -31,15 +39,12 @@ export default defineComponent({
   components: {
     EssentialLink
   },
-
-  setup () {
-    return {
-      
-    }
-  },
   methods: {
     toggle () {
       this.user = !this.user
+    },
+    signIn () {
+      this.$router.push('/sign-in')
     }
   },
   data () {
