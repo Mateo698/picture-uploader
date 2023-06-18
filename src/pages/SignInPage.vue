@@ -1,7 +1,7 @@
 <template>
     <q-page class="flex flex-center">
         <div class="q-pa-md row justify-center">
-            <q-card style="width: 400px; height: 400px;" >
+            <q-card style="width: 400px; height: 400px; background-color: #fff4c3;" >
                 <q-card-section>
                     <h4 class="text-h4">Sign In</h4>
                 </q-card-section>

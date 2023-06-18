@@ -1,16 +1,13 @@
 <template>
   <q-layout view="lHh Lpr lFf" v-if="user">
     <q-header elevated>
-      <q-toolbar v-if="user" class="row justify-center" style="height: 65px;">
-        <div style="display: flex; flex-grow: 1;justify-content: center;">
-          <h4>Picture Uploader</h4>
-        </div>
-        <div>
+      <q-toolbar v-if="user" class="row justify-center" >
+          <q-toolbar-title>Picture.io</q-toolbar-title>
           <q-btn       
           icon="logout"
           flat
           />
-      </div> 
+ 
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -50,11 +47,7 @@ export default defineComponent({
   data () {
     return {
       user: true,
-      currentPage: 'Home',
-      pages: [
-        'Home',
-        'Feed',
-      ]
+      
     }
   }
 })
