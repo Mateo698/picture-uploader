@@ -19,13 +19,14 @@
                     label="Password"
                     lazy-rules
                     :rules="[val => !!val || 'Please enter your password']"
+                    type="password"
                     />
                 </q-card-section>
                 <q-card-actions align="right">
                     <q-btn
                     color="secondary"
                     label="Sign In"
-                    @click="signIn()"
+                    @click="logIn()"
                     />
                     <q-btn
                     color="primary"
@@ -41,19 +42,40 @@
 </template>
 
 <script>
-import { defineComponent} from 'vue'
+import { defineComponent,ref} from 'vue'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 export default defineComponent({
     name: 'SignInPage',
     setup () {
+        const email = ref('')
+        const password = ref('')
+        const router = useRouter()
+        const auth = getAuth()
+        const logIn = () => {
+            signInWithEmailAndPassword(auth, email.value, password.value)
+            .then((userCredential) => {
+                // Signed in 
+                //const user = userCredential.user;
+                console.log(auth.currentUser)
+                alert('Sign in success')
+                router.push('/')
+                // ...
+            })
+            .catch((error) => {
+                alert('Sign in fail')
+                //const errorCode = error.code;
+                //const errorMessage = error.message;
+            });
+        }
+
         return {
-            email: '',
-            password: ''
+            email,
+            password,
+            logIn
         }
     },
     methods: {
-        signIn () {
-            this.$router.push('/')
-        },
         signUp () {
             this.$router.push('/register')
         }

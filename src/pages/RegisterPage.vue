@@ -10,15 +10,13 @@
                 filled
                 v-model="email"
                 label="Email"
-                lazy-rules
-                :rules="[val => !!val || 'Please enter your email']"
                 />
                 <q-input
                 filled
                 v-model="password"
                 label="Password"
-                lazy-rules
-                :rules="[val => !!val || 'Please enter your password']"
+                class="q-mt-md"
+                type="password"
                 />
             </q-card-section>
             <q-card-actions align="right">
@@ -30,7 +28,7 @@
                 <q-btn
                 color="primary"
                 label="Register"
-                @click="signUp()"
+                @click="register()"
                 />
             </q-card-actions>
         </q-card>   
@@ -40,22 +38,43 @@
 </template>
 
 <script>
-import { defineComponent} from 'vue'
+import { defineComponent,ref} from 'vue'
+import {getAuth , createUserWithEmailAndPassword} from 'firebase/auth'
+import { useRouter } from 'vue-router'
 export default defineComponent({
     name: 'RegisterPage',
     setup () {
+        const email = ref('')
+        const password = ref('')
+        const router = useRouter()
+        const register = () => {
+            createUserWithEmailAndPassword(getAuth(), email.value, password.value).then((userCredential) => {
+                // Signed in 
+                //const user = userCredential.user;
+                alert('Register success')
+                
+                // ...
+              })
+              .catch((error) => {
+                alert('Register fail')
+                //const errorCode = error.code;
+                //const errorMessage = error.message;
+                // ..
+              }).then(() => {
+                router.push('/sign-in')
+              });
+        }
         return {
-            email: '',
-            password: ''
+            email,
+            password,
+            register
         }
     },
     methods: {
         signIn () {
             this.$router.push('/sign-in')
-        },
-        signUp () {
-            this.$router.push('/register')
         }
-    }
+    },
+   
 })
 </script>

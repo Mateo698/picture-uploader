@@ -1,11 +1,12 @@
 <template>
-  <q-layout view="lHh Lpr lFf" v-if="user">
+  <q-layout view="lHh Lpr lFf" v-if="user != null">
     <q-header elevated>
       <q-toolbar v-if="user" class="row justify-center" >
           <q-toolbar-title>Picture.io</q-toolbar-title>
           <q-btn       
           icon="logout"
           flat
+          @click="logOut"
           />
  
       </q-toolbar>
@@ -29,7 +30,8 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-
+import { getAuth, signOut } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -42,12 +44,24 @@ export default defineComponent({
     },
     signIn () {
       this.$router.push('/sign-in')
-    }
+    },
   },
   data () {
+    const router = useRouter()
+    const user = getAuth().currentUser
+    
+    const logOut = () => {
+      signOut(getAuth()).then(() => {
+        // Sign-out successful.
+        router.push('/sign-in')
+      }).catch((error) => {
+        console.log(error)
+        alert('Sign out fail')
+      })
+    }
     return {
-      user: true,
-      
+      user,
+      logOut
     }
   }
 })
