@@ -66,6 +66,7 @@ import { storage } from 'src/boot/firebase'
 import { getStorage, uploadBytes, getDownloadURL, deleteObject,listAll } from 'firebase/storage'
 import {ref as storageRef} from 'firebase/storage'
 import { getAuth} from 'firebase/auth'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -114,15 +115,14 @@ export default defineComponent({
     },
     downloadImage(item) {
       const a = document.createElement('a')
-      a.href = item.url
-      a.download = 'image'
-      document.body.appendChild(a);
+      getDownloadURL(item.ref).then((url) => {
+        a.href = ""
+        a.download = url
+        console.log(url)
+      })
 
-      // Trigger the download by simulating a click on the <a> element
-      a.click();
+      
 
-      // Clean up by removing the link from the DOM
-      document.body.removeChild(a);
     },
     async getData(){
       const userUID = getAuth().currentUser.uid
