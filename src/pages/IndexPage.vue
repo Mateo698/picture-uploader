@@ -60,13 +60,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { defineComponent } from 'vue'
 import { ref, watch } from 'vue'
 import { storage } from 'src/boot/firebase'
-import { getStorage, uploadBytes, getDownloadURL, deleteObject,listAll } from 'firebase/storage'
+import { uploadBytes, getDownloadURL, deleteObject,listAll } from 'firebase/storage'
 import {ref as storageRef} from 'firebase/storage'
 import { getAuth} from 'firebase/auth'
-import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -116,9 +117,11 @@ export default defineComponent({
     downloadImage(item) {
       const a = document.createElement('a')
       getDownloadURL(item.ref).then((url) => {
+        const router = useRouter()
         a.href = ""
         a.download = url
         console.log(url)
+        this.router.push(url)
       })
 
       

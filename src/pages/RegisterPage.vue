@@ -1,3 +1,4 @@
+
 <template>
     <q-page class="flex flex-center">
         <div class="q-pa-md row justify-center">
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { defineComponent,ref} from 'vue'
 import {getAuth , createUserWithEmailAndPassword} from 'firebase/auth'
 import { useRouter } from 'vue-router'
@@ -57,6 +59,7 @@ export default defineComponent({
               })
               .catch((error) => {
                 alert('Register fail')
+                console.log(error)
                 //const errorCode = error.code;
                 //const errorMessage = error.message;
                 // ..

@@ -28,15 +28,14 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { defineComponent} from 'vue'
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    
   },
   methods: {
     toggle () {
