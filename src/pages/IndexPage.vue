@@ -14,7 +14,7 @@
               color-stop(0, rgba(0,0,0,1.0)) /* Bottom */
           );">
           <q-btn color="accent" icon="delete" @click="deleteImage(item)" />
-          <q-btn color="secondary" icon="visibility" @click="editImage(item)" />
+          <q-btn color="secondary" icon="visibility" @click="viewImage(item)" />
           <q-btn color="primary" icon="download" @click="downloadImage(item)" />
         </q-card-actions>
       </q-card>
@@ -67,6 +67,7 @@ import { storage } from 'src/boot/firebase'
 import { uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage'
 import { ref as storageRef } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
+import router from 'src/router'
 
 
 export default defineComponent({
@@ -87,7 +88,6 @@ export default defineComponent({
         // Delete the file from the dataRef array
         this.dataRef.splice(this.dataRef.indexOf(this.selectedImage.ref), 1)
         // Delete the file from the storage
-        console.log(this.selectedImage.ref)
       }).catch((error) => {
         console.log(error)
       })
@@ -107,12 +107,18 @@ export default defineComponent({
       }
     },
     deleteImage(item) {
-      console.log(item)
       this.selectedImage = item
       this.confirm = true
     },
-    editImage(item) {
-      console.log(item)
+    viewImage(item) {
+      getDownloadURL(item.ref).then((url) => {
+        const a = document.createElement("a");
+        a.style = "display: none";
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noreferrer";
+        a.click();
+      })
     },
     downloadImage(item) {
 
