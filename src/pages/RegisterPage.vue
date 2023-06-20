@@ -2,7 +2,7 @@
 <template>
     <q-page class="flex flex-center">
         <div class="q-pa-md row justify-center">
-        <q-card style="width: 400px; height: 400px;background-color: #fff4c3;" >
+        <q-card :style="{width: calculateWidth(), height: '400px', backgroundColor : '#fff4c3'}"  >
             <q-card-section>
                 <h4 class="text-h4">Register</h4>
             </q-card-section>
@@ -51,8 +51,6 @@ export default defineComponent({
         const router = useRouter()
         const register = () => {
             createUserWithEmailAndPassword(getAuth(), email.value, password.value).then((userCredential) => {
-                // Signed in 
-                //const user = userCredential.user;
                 alert('Register success')
                 router.push('/sign-in')
                 // ...
@@ -60,9 +58,6 @@ export default defineComponent({
               .catch((error) => {
                 alert('Register fail')
                 console.log(error)
-                //const errorCode = error.code;
-                //const errorMessage = error.message;
-                // ..
               });
         }
         return {
@@ -74,6 +69,9 @@ export default defineComponent({
     methods: {
         signIn () {
             this.$router.push('/sign-in')
+        },
+        calculateWidth () {
+            return this.$q.screen.width < 450 ? '300px' : '400px'
         }
     },
    

@@ -1,7 +1,7 @@
 <template>
     <q-page class="flex flex-center">
         <div class="q-pa-md row justify-center">
-            <q-card style="width: 400px; height: 400px; background-color: #fff4c3;" >
+            <q-card :style="{width: calculateWidth(), height: '400px', backgroundColor : '#fff4c3'}" >
                 <q-card-section>
                     <h4 class="text-h4">Sign In</h4>
                 </q-card-section>
@@ -12,6 +12,7 @@
                     label="Email"
                     lazy-rules
                     :rules="[val => !!val || 'Please enter your email']"
+                    data-cy="email-input"
                     />
                     <q-input
                     filled
@@ -20,6 +21,7 @@
                     lazy-rules
                     :rules="[val => !!val || 'Please enter your password']"
                     type="password"
+                    data-cy="password-input"
                     />
                 </q-card-section>
                 <q-card-actions align="right">
@@ -27,11 +29,13 @@
                     color="secondary"
                     label="Sign In"
                     @click="logIn()"
+                    data-cy="sign-in-button"
                     />
                     <q-btn
                     color="primary"
                     label="Register"
                     @click="signUp()"
+                    data-cy="register-button"
                     />
                 </q-card-actions>
             </q-card>
@@ -55,17 +59,12 @@ export default defineComponent({
         const logIn = () => {
             signInWithEmailAndPassword(auth, email.value, password.value)
             .then((userCredential) => {
-                // Signed in 
-                //const user = userCredential.user;
                 console.log(userCredential)
                 router.push('/')
-                // ...
             })
             .catch((error) => {
                 console.log(error)
                 alert('Sign in fail, please check the information you entered')
-                //const errorCode = error.code;
-                //const errorMessage = error.message;
             });
         }
 
@@ -78,6 +77,9 @@ export default defineComponent({
     methods: {
         signUp () {
             this.$router.push('/register')
+        },
+        calculateWidth () {
+            return this.$q.screen.width < 450 ? '300px' : '400px'
         }
     }
 })

@@ -3,8 +3,10 @@
     <!-- Renders if the data its present -->
     <div v-if="data.length != 0" class="row justify-center">
       <q-card
-        :style="{ width: calculateWidth(), height: '300px', backgroundImage: 'url(' + item.url + ')', backgroundSize: 'cover', backgroundPosition: 'center' }"
-        v-for="item in data" :key="item" class="column q-ma-sm">
+        :style="{ width: calculateWidth(), height: calculateWidth(), backgroundImage: 'url(' + item.url + ')', backgroundSize: 'cover', backgroundPosition: 'center' }"
+        v-for="item in data" :key="item" class="column q-ma-sm"
+        data-cy="picture-card"
+        >
         <q-space />
         <q-card-actions align="center" style="background-color: black; background: -webkit-gradient(
               linear,
@@ -13,20 +15,20 @@
               color-stop(1, rgba(0,0,0,0.0)), /* Top */
               color-stop(0, rgba(0,0,0,1.0)) /* Bottom */
           );">
-          <q-btn color="accent" icon="delete" @click="deleteImage(item)" />
-          <q-btn color="secondary" icon="visibility" @click="viewImage(item)" />
-          <q-btn color="primary" icon="download" @click="downloadImage(item)" />
+          <q-btn color="accent" icon="delete" @click="deleteImage(item)" :style="{width: calculateBttnSize(), height: calculateBttnSize()}"/>
+          <q-btn color="secondary" icon="visibility" @click="viewImage(item)" :style="{width: calculateBttnSize(), height: calculateBttnSize()}"/>
+          <q-btn color="primary" icon="download" @click="downloadImage(item)" :style="{width: calculateBttnSize(), height: calculateBttnSize()}"/>
         </q-card-actions>
       </q-card>
     </div>
     <!-- Renders if the data its not present -->
-    <div class="fit column  justify-center items-center content-center" v-else style="flex-grow: 1;">
+    <div v-else class="fit column  justify-center items-center content-center" style="flex-grow: 1;">
       <h2 class="text-h2 q-mx-xl">Upload your first picture!</h2>
 
       <q-btn label="Add photo" class="q-my-xl" color="secondary" rounded @click="card = true" />
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="data.length != 0">
-      <q-btn fab icon="add" label="New Picture" color="secondary" @click="card = true" />
+      <q-btn fab icon="add" label="New Picture" color="secondary" @click="card = true" data-cy="add-picture-button" />
     </q-page-sticky>
   </q-page>
 
@@ -35,11 +37,11 @@
       <q-img src="../assets/upload.png" v-if="!files" />
       <q-img :src="uploadedImage" v-else />
       <q-card-section>
-        <q-file v-model="files" label="Pick a picture" filled counter multiple style="max-width: 300px" />
+        <q-file v-model="files" label="Pick a picture" filled counter multiple style="max-width: 300px" data-cy="select-picture-input" />
       </q-card-section>
       <q-separator />
       <q-card-actions align="center">
-        <q-btn v-close-popup flat color="primary" label="Upload" @click="uploadImage()" />
+        <q-btn v-close-popup flat color="primary" label="Upload" @click="uploadImage()" data-cy="upload-button" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -67,7 +69,6 @@ import { storage } from 'src/boot/firebase'
 import { uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage'
 import { ref as storageRef } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
-import router from 'src/router'
 
 
 export default defineComponent({
@@ -106,6 +107,15 @@ export default defineComponent({
         return '300px'
       }
     },
+    calculateBttnSize(){
+      const width = window.innerWidth
+      if (width < 600) {
+        return '30px'
+      } else {
+        return '40px'
+      }
+    }
+    ,
     deleteImage(item) {
       this.selectedImage = item
       this.confirm = true
