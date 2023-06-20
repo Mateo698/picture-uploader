@@ -23,7 +23,7 @@
     <div class="fit column  justify-center items-center content-center" v-else style="flex-grow: 1;">
       <h2 class="text-h2 q-mx-xl">Upload your first picture!</h2>
 
-      <q-btn label="Add photo" class="q-my-xl" color="secondary" rounded  @click="card = true"/>
+      <q-btn label="Add photo" class="q-my-xl" color="secondary" rounded @click="card = true" />
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="data.length != 0">
       <q-btn fab icon="add" label="New Picture" color="secondary" @click="card = true" />
@@ -45,18 +45,18 @@
   </q-dialog>
 
   <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <q-avatar icon="warning" color="primary" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this picture?</span>
-        </q-card-section>
+    <q-card>
+      <q-card-section class="row items-center">
+        <q-avatar icon="warning" color="primary" text-color="white" />
+        <span class="q-ml-sm">Are you sure you want to delete this picture?</span>
+      </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn flat label="Confirm" color="primary" @click="handleConfirm" />
-          <q-btn label="Cancel" color="primary" @click="handleCancel" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <q-card-actions align="right">
+        <q-btn flat label="Confirm" color="primary" @click="handleConfirm" />
+        <q-btn label="Cancel" color="primary" @click="handleCancel" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -64,10 +64,10 @@
 import { defineComponent } from 'vue'
 import { ref, watch } from 'vue'
 import { storage } from 'src/boot/firebase'
-import { uploadBytes, getDownloadURL, deleteObject,listAll } from 'firebase/storage'
-import {ref as storageRef} from 'firebase/storage'
-import { getAuth} from 'firebase/auth'
-import { useRouter } from 'vue-router'
+import { uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage'
+import { ref as storageRef } from 'firebase/storage'
+import { getAuth } from 'firebase/auth'
+
 
 export default defineComponent({
   name: 'IndexPage',
@@ -75,7 +75,7 @@ export default defineComponent({
   data() {
     return {
       data: [],
-      dataRef : []
+      dataRef: []
     }
   },
   methods: {
@@ -115,34 +115,49 @@ export default defineComponent({
       console.log(item)
     },
     downloadImage(item) {
-      const a = document.createElement('a')
+
       getDownloadURL(item.ref).then((url) => {
-        const router = useRouter()
-        a.href = ""
-        a.download = url
-        console.log(url)
-        this.router.push(url)
+
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+          let a = document.createElement("a");
+          a.style = "display: none";
+          document.body.appendChild(a);
+          //Create a DOMString representing the blob 
+          //and point the link element towards it
+          let url = window.URL.createObjectURL(blob);
+          a.href = url;
+          a.download = 'image.png';
+          //programatically click the link to trigger the download
+          a.click();
+          //release the reference to the file by revoking the Object URL
+          window.URL.revokeObjectURL(url);
+        };
+        xhr.open('GET', url);
+        xhr.send();
+
+      }).catch((error) => {
+        console.log(error)
       })
-
-      
-
     },
-    async getData(){
+    async getData() {
       const userUID = getAuth().currentUser.uid
       const imageRef = storageRef(storage, `${userUID}/`);
       listAll(imageRef).then((res) => {
         this.dataRef = res.items
         res.items.forEach((itemRef) => {
           getDownloadURL(itemRef).then((url) => {
-            this.data.push({url: url, ref: itemRef})
+            this.data.push({ url: url, ref: itemRef })
           })
         })
       }).catch((error) => {
         console.log(error)
       })
     },
-    uploadImage(){
-      if(this.uploadedImage){
+    uploadImage() {
+      if (this.uploadedImage) {
         const img = document.createElement('img')
         img.src = this.uploadedImage
         img.onload = () => {
@@ -154,20 +169,20 @@ export default defineComponent({
           const ctx = canvas.getContext('2d')
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
           const srcEncoded = ctx.canvas.toDataURL(img, 'image/png');
-          console.log(srcEncoded)
           fetch(srcEncoded).then(res => res.blob()).then(blob => {
             const userUID = getAuth().currentUser.uid
             const imgRef = storageRef(storage, `${userUID}/${this.files[0].name.split('.')[0]}`) //
             uploadBytes(imgRef, blob).then((snapshot) => {
               getDownloadURL(snapshot.ref).then((url) => {
-                this.data.push({url: url, ref: snapshot.ref})
+                this.data.push({ url: url, ref: snapshot.ref })
               })
               this.card = false
             });
           })
         }
-    }}
-    
+      }
+    }
+
   }
   , setup() {
     const card = ref(false)
@@ -186,8 +201,8 @@ export default defineComponent({
     watch(files, (val) => {
       pictureReader(val[0])
     })
-    return { card, files, uploadedImage, confirm,selectedImage}
-  },mounted(){
+    return { card, files, uploadedImage, confirm, selectedImage }
+  }, mounted() {
     this.getData()
   }
 })

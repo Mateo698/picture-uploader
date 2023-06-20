@@ -58,13 +58,12 @@ export default defineComponent({
                 // Signed in 
                 //const user = userCredential.user;
                 console.log(userCredential)
-                alert('Sign in success')
                 router.push('/')
                 // ...
             })
             .catch((error) => {
                 console.log(error)
-                alert('Sign in fail')
+                alert('Sign in fail, please check the information you entered')
                 //const errorCode = error.code;
                 //const errorMessage = error.message;
             });

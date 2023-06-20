@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf" v-if="user != null">
     <q-header elevated>
       <q-toolbar v-if="user" class="row justify-center" >
+        <img src="~assets/logo.png" style="width: 60px; height: 60px" />
           <q-toolbar-title>Picture.io</q-toolbar-title>
           <q-btn       
           icon="logout"

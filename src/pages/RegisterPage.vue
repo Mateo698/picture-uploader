@@ -54,7 +54,7 @@ export default defineComponent({
                 // Signed in 
                 //const user = userCredential.user;
                 alert('Register success')
-                
+                router.push('/sign-in')
                 // ...
               })
               .catch((error) => {
@@ -63,8 +63,6 @@ export default defineComponent({
                 //const errorCode = error.code;
                 //const errorMessage = error.message;
                 // ..
-              }).then(() => {
-                router.push('/sign-in')
               });
         }
         return {
